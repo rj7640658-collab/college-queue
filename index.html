@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusQueue Optimizer — College Service Low-Wait Assistant</title>
+  <meta name="description" content="Intelligent College Service Optimization Assistant to help students complete administrative tasks with minimum waiting time and zero wasted trips.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background Glow Accents -->
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <!-- Header / Navigation -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-group">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <div>
+          <span class="logo-title">CampusQueue <span class="badge-tag">AI Optimizer</span></span>
+          <p class="logo-subtitle">College Service & Errand Wait-Time Reducer</p>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <button id="viewDeptDirectoryBtn" class="btn-ghost" title="Campus Offices Guide">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+          Department Map
+        </button>
+        <button id="resetAppBtn" class="btn-ghost" title="Clear and Start Fresh">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+          New Task
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-wrapper">
+    <!-- Hero / Headline -->
+    <section class="hero-section">
+      <div class="hero-tag">Zero Unnecessary Waiting • 1-Visit Resolution</div>
+      <h1 class="hero-title">Get College Tasks Done in <span class="highlight-gradient">One Shot</span> Without Standing in Lines</h1>
+      <p class="hero-description">
+        State your college paperwork or errand requirement in plain words. CampusQueue breaks down requirements, eliminates duplicate visits, tells you what to prepare beforehand, and plots the fastest route.
+      </p>
+    </section>
+
+    <!-- Interactive Workspace Grid -->
+    <div class="workspace-grid">
+      
+      <!-- Left Column: Input, Quick Scenarios & Multi-task Builder -->
+      <section class="left-panel">
+        
+        <!-- Input Card -->
+        <div class="glass-card main-input-card">
+          <div class="card-header">
+            <div class="header-with-badge">
+              <span class="step-counter">STEP 1 & 2</span>
+              <h2 class="card-title">Describe Your Requirement</h2>
+            </div>
+            <span class="hint-label">Informal or partial queries welcome</span>
+          </div>
+
+          <div class="input-container">
+            <textarea 
+              id="studentQueryInput" 
+              class="query-textarea" 
+              placeholder="e.g., 'Need a bonafide certificate for my education loan by tomorrow', 'Lost my college ID card and exam is in 3 days', or 'Have fee concession approval from dean, where to submit?'"
+              rows="4"
+            ></textarea>
+            
+            <div class="input-footer">
+              <div class="char-count"><span id="queryLength">0</span> characters</div>
+              <div class="input-buttons">
+                <button id="optimizeBtn" class="btn-primary">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  </svg>
+                  Generate Low-Wait Plan
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Scenario Presets -->
+          <div class="preset-section">
+            <span class="preset-label">Quick Presets / Common Student Scenarios:</span>
+            <div class="preset-chips">
+              <button class="chip-btn" data-preset="bonafide_bank">📄 Bonafide for Bank Loan</button>
+              <button class="chip-btn" data-preset="lost_id_hallticket">🪪 Lost ID Card before Exams</button>
+              <button class="chip-btn" data-preset="transcript_higher_ed">🎓 Official Transcripts / WES</button>
+              <button class="chip-btn" data-preset="fee_concession">💰 Fee Concession & Challan</button>
+              <button class="chip-btn" data-preset="hostel_clearance">🏠 Hostel No-Dues Clearance</button>
+              <button class="chip-btn" data-preset="leave_medical">🏥 Medical Leave Endorsement</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Multi-Task Trip Combiner -->
+        <div class="glass-card multi-task-card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title-sm">🔄 Combine Multiple Errands (Batch Visit)</h3>
+              <p class="card-subtitle-sm">Save days by clustering tasks across departments in one planned morning visit.</p>
+            </div>
+            <button id="toggleMultiTaskBtn" class="btn-sm btn-outline">+ Add Errand</button>
+          </div>
+
+          <div id="multiTaskContainer" class="multi-task-body hidden">
+            <div class="multi-task-input-row">
+              <input type="text" id="additionalTaskInput" placeholder="Add another task, e.g. 'Pay library late fee' or 'Collect sports kit NOC'" class="text-input-sm">
+              <button id="addMultiTaskBtn" class="btn-sm btn-secondary">Add</button>
+            </div>
+            <div id="multiTaskList" class="multi-task-chips-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Clarification Modal / Inline Questions (when missing info) -->
+        <div id="clarificationBox" class="glass-card clarification-card hidden">
+          <div class="clarification-header">
+            <div class="icon-warning">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </div>
+            <div>
+              <h4 class="clarification-title">Quick Clarification Needed</h4>
+              <p class="clarification-subtitle">To prevent counter rejections, clarify these few details:</p>
+            </div>
+          </div>
+          <div id="clarificationQuestionsList" class="clarification-questions">
+            <!-- Dynamically injected questions & clickable choice chips -->
+          </div>
+          <button id="applyClarificationsBtn" class="btn-sm btn-primary full-width">Update Plan with Details</button>
+        </div>
+
+        <!-- Best Practices & Golden Rules Accordion -->
+        <div class="glass-card rules-card">
+          <h4 class="rules-heading">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            Campus Time-Saving Golden Rules
+          </h4>
+          <ul class="rules-list">
+            <li><strong>Rule 1: Never reach counters during lunch transitions (1:00 PM – 2:15 PM)</strong> — queues freeze and token counters close early.</li>
+            <li><strong>Rule 2: Complete xerox/printouts outside campus</strong> — campus stationery shops have 20–30 min waiting queues in the morning.</li>
+            <li><strong>Rule 3: Get Department signoff before Main Admin</strong> — the Registrar counter will reject applications missing HoD stamp.</li>
+            <li><strong>Rule 4: Exact change or digital transaction receipt</strong> — cash desks frequently turn students away without change.</li>
+          </ul>
+        </div>
+
+      </section>
+
+      <!-- Right Column: Low-Wait Plan Output & Strategy Engine -->
+      <section class="right-panel">
+        
+        <!-- Empty State (Initial) -->
+        <div id="emptyPlanState" class="glass-card empty-state-card">
+          <div class="empty-icon-wrap">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <h3>Ready to Optimize Your Visit</h3>
+          <p>Type what you need in the box on the left, or choose one of the quick scenario chips to see an instant low-wait execution plan, pre-departure checklist, and raw JSON specification.</p>
+          <div class="demo-arrow">👈 Select or type a requirement to begin</div>
+        </div>
+
+        <!-- Plan Result Container -->
+        <div id="planResultContainer" class="plan-result-wrapper hidden">
+          
+          <!-- Top Strategy Summary Bar -->
+          <div class="glass-card strategy-banner">
+            <div class="strategy-top-row">
+              <div class="dept-badge-wrap">
+                <span id="serviceCategoryBadge" class="badge-pill dept-pill">Administration</span>
+                <span id="confidenceBadge" class="badge-pill confidence-high">HIGH CONFIDENCE</span>
+                <span id="physicalPresenceBadge" class="badge-pill mode-pill">1 Counter Visit</span>
+              </div>
+              <div class="action-buttons-group">
+                <button id="viewJsonModalBtn" class="btn-sm btn-ghost" title="View Machine-Readable JSON Output">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="16 18 22 12 16 6"/>
+                    <polyline points="8 6 2 12 8 18"/>
+                  </svg>
+                  JSON Spec
+                </button>
+                <button id="printChecklistBtn" class="btn-sm btn-ghost" title="Print / Save Checklist">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 6 2 18 2 18 9"/>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                    <rect x="6" y="14" width="12" height="8"/>
+                  </svg>
+                  Export
+                </button>
+              </div>
+            </div>
+
+            <h2 id="planUnderstoodHeading" class="strategy-title">Bonafide Certificate for Bank Loan</h2>
+            
+            <div class="strategy-callout">
+              <div class="strategy-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+              </div>
+              <div>
+                <strong class="callout-label">Recommended Strategy:</strong>
+                <p id="planStrategyText" class="strategy-summary-desc">Pre-fill online request portal or keep signed application ready before entering Student Section Counter 4 to finish in 8 minutes.</p>
+              </div>
+            </div>
+
+            <!-- Wait Time Comparison Meter -->
+            <div class="savings-meter-card">
+              <div class="meter-stat">
+                <span class="meter-num text-danger" id="unplannedTimeDisplay">~90-120 mins</span>
+                <span class="meter-label">Unplanned / Average Wait</span>
+              </div>
+              <div class="meter-divider">➔</div>
+              <div class="meter-stat">
+                <span class="meter-num text-success" id="optimizedTimeDisplay">~15-25 mins</span>
+                <span class="meter-label">With CampusQueue Route</span>
+              </div>
+              <div class="meter-badge">
+                <span id="savedTimeTag">⚡ Saves ~75% Time</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 1: Pre-Departure Document Checklist -->
+          <div class="glass-card section-card">
+            <div class="card-header-flex">
+              <div class="section-title-wrap">
+                <span class="section-number">01</span>
+                <div>
+                  <h3 class="section-title">Prepare Before Leaving Hostel / Home</h3>
+                  <p class="section-sub">Never get turned away at the window because you lack a xerox or stamp.</p>
+                </div>
+              </div>
+              <span id="docCountBadge" class="count-tag">3 items required</span>
+            </div>
+
+            <div id="documentsList" class="checklist-grid">
+              <!-- Dynamically populated interactive checkbox items -->
+            </div>
+          </div>
+
+          <!-- Section 2: Step-by-Step Low-Wait Route -->
+          <div class="glass-card section-card">
+            <div class="card-header-flex">
+              <div class="section-title-wrap">
+                <span class="section-number">02</span>
+                <div>
+                  <h3 class="section-title">Step-by-Step Low-Wait Sequence</h3>
+                  <p class="section-sub">Follow this exact order of operations to minimize transit & counter holding.</p>
+                </div>
+              </div>
+              <div class="timing-badge" id="timingBadge">
+                🕒 Best Window: 10:30 AM – 11:45 AM
+              </div>
+            </div>
+
+            <div id="stepsTimeline" class="timeline-container">
+              <!-- Dynamically populated timeline nodes -->
+            </div>
+          </div>
+
+          <!-- Section 3: Wasted Time Radar & Red Flags -->
+          <div class="two-col-grid">
+            
+            <!-- Bottlenecks & Wasted Time Points -->
+            <div class="glass-card card-alert-red">
+              <div class="card-header-sm">
+                <div class="icon-danger-circle">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                </div>
+                <h4 class="alert-title-red">Possible Waiting Points & Traps</h4>
+              </div>
+              <ul id="waitingPointsList" class="alert-list-red">
+                <!-- Dynamically populated -->
+              </ul>
+            </div>
+
+            <!-- Time-Saving Opportunities -->
+            <div class="glass-card card-alert-green">
+              <div class="card-header-sm">
+                <div class="icon-success-circle">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                </div>
+                <h4 class="alert-title-green">Time-Saving Hacks</h4>
+              </div>
+              <ul id="timeSavingList" class="alert-list-green">
+                <!-- Dynamically populated -->
+              </ul>
+            </div>
+
+          </div>
+
+          <!-- Section 4: What Needs College Verification (No Hallucination Rule) -->
+          <div class="glass-card verification-card">
+            <div class="verification-header">
+              <div class="icon-verify">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                  <polyline points="10 9 9 9 8 9"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="verification-title">Important: Information to Verify with Your College</h4>
+                <p class="verification-sub">We adhere to the strict rule of never fabricating college-specific token numbers or fee schedules. Verify these specifics:</p>
+              </div>
+            </div>
+            <ul id="verificationList" class="verification-items-list">
+              <!-- Dynamically populated items -->
+            </ul>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Modal: JSON Output Inspector (Required Output Format) -->
+  <div id="jsonModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-tag">JSON Schema View</span>
+          <h3>Standard Output Format</h3>
+        </div>
+        <div class="modal-header-actions">
+          <button id="copyJsonBtn" class="btn-sm btn-secondary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            <span id="copyJsonText">Copy JSON</span>
+          </button>
+          <button id="closeJsonModalBtn" class="btn-close">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <pre><code id="jsonCodeView" class="json-code"></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Department Directory Map -->
+  <div id="directoryModal" class="modal-overlay hidden">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-tag">Campus Navigation</span>
+          <h3>Standard College Department Guide & Counters</h3>
+        </div>
+        <button id="closeDirectoryModalBtn" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="directory-grid">
+          
+          <div class="dept-guide-card">
+            <div class="dept-card-head">
+              <span class="dept-card-icon">🏛️</span>
+              <h4>Student Section / Registrar Office</h4>
+            </div>
+            <p class="dept-card-purpose">Handles Bonafide, Leaving certificates, Transcripts, Migration certificates, and official stamp endorsements.</p>
+            <div class="dept-tip"><strong>Low-Wait Tip:</strong> Token counters often close at 12:30 PM for noon processing. Visit between 10:15 AM – 11:30 AM.</div>
+          </div>
+
+          <div class="dept-guide-card">
+            <div class="dept-card-head">
+              <span class="dept-card-icon">💳</span>
+              <h4>Accounts / Fee Counter</h4>
+            </div>
+            <p class="dept-card-purpose">Handles Fee receipts, Challan endorsements, No-Dues clearance, scholarship cheque disbursement, and refund requests.</p>
+            <div class="dept-tip"><strong>Low-Wait Tip:</strong> Massive lines on the last 3 days of any installment deadline. Always verify if online portal / ERP fee payment is active.</div>
+          </div>
+
+          <div class="dept-guide-card">
+            <div class="dept-card-head">
+              <span class="dept-card-icon">📝</span>
+              <h4>Exam Cell / Controller of Examinations</h4>
+            </div>
+            <p class="dept-card-purpose">Hall ticket re-issues, grade sheet corrections, re-evaluation applications, backlog clearance verification.</p>
+            <div class="dept-tip"><strong>Low-Wait Tip:</strong> Bring written endorsement from your Department Mentor/HoD before approaching exam in-charge.</div>
+          </div>
+
+          <div class="dept-guide-card">
+            <div class="dept-card-head">
+              <span class="dept-card-icon">📚</span>
+              <h4>Central Library Desk</h4>
+            </div>
+            <p class="dept-card-purpose">Book returns, overdue fine clearance, book bank scheme, Library No-Dues signature.</p>
+            <div class="dept-tip"><strong>Low-Wait Tip:</strong> Can easily be batched with accounts visit. Digital book clearance takes under 3 minutes if books are already returned.</div>
+          </div>
+
+          <div class="dept-guide-card">
+            <div class="dept-card-head">
+              <span class="dept-card-icon">🏠</span>
+              <h4>Hostel Warden Office</h4>
+            </div>
+            <p class="dept-card-purpose">Room allotment, mess rebate slips, vacating inspection, gate pass approvals.</p>
+            <div class="dept-tip"><strong>Low-Wait Tip:</strong> Wardens are usually available for signatures in designated morning (8:30-10 AM) or evening (5-6:30 PM) windows.</div>
+          </div>
+
+          <div class="dept-guide-card">
+            <div class="dept-card-head">
+              <span class="dept-card-icon">👨‍🏫</span>
+              <h4>Department HoD / Mentor Cabin</h4>
+            </div>
+            <p class="dept-card-purpose">Academic approvals, leave applications, elective add/drop forms, event NOC.</p>
+            <div class="dept-tip"><strong>Low-Wait Tip:</strong> Always secure Mentor/HoD sign first before visiting central administration counters.</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p>CampusQueue Optimizer • Built to eliminate administrative friction for students • Adheres to zero-fabrication standards.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
